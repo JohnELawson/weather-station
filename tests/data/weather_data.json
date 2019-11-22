@@ -1,0 +1,42 @@
+{
+    "coord":{
+       "lon":0.4,
+       "lat":51.52
+    },
+    "weather":[
+       {
+          "id":804,
+          "main":"Clouds",
+          "description":"overcast clouds",
+          "icon":"04n"
+       }
+    ],
+    "base":"stations",
+    "main":{
+       "temp":7.71,
+       "pressure":995,
+       "humidity":93,
+       "temp_min":6.67,
+       "temp_max":9.44
+    },
+    "visibility":10000,
+    "wind":{
+       "speed":5.1,
+       "deg":100
+    },
+    "clouds":{
+       "all":100
+    },
+    "dt":1574457526,
+    "sys":{
+       "type":1,
+       "id":1419,
+       "country":"GB",
+       "sunrise":1574407661,
+       "sunset":1574438491
+    },
+    "timezone":0,
+    "id":2646590,
+    "name":"Horndon on the Hill",
+    "cod":200
+ }
