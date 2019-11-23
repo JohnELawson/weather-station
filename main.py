@@ -1,6 +1,6 @@
 import requests
 from dataclasses import dataclass
-from typing import Mapping, Any
+from typing import Mapping, Any, List
 
 KEY = "165c09ec420c7f790349861c6d6309d2"
 LAT = "51.52"
@@ -43,19 +43,22 @@ def extract_weather(data: Mapping[str, Any]) -> WeatherReading:
     )
 
 
-def get_weather():
+def get_weather() -> WeatherReading:
     data = call_api(DATA_ENDPOINT)
     weather = extract_weather(data)
     weather.print_weather()
+    return weather
 
 
-def get_forcast():
+def get_forcast() -> List[WeatherReading]:
     forcast_data = call_api(FORCAST_ENDPOINT)["list"]
     forcast_data = sorted(forcast_data, key=lambda k: int(k['dt']))
     forcast_weather = [extract_weather(i) for i in forcast_data]
 
     for prediction in forcast_weather:
         prediction.print_weather()
+
+    return forcast_weather
 
 
 def main():
