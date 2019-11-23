@@ -13,7 +13,7 @@ def mock_weather(requests_mock):
         data = json.load(json_file)
         requests_mock.get(data_url, json=data)
 
-    
+
 def mock_forcast(requests_mock):
     with open('./tests/data/forcast_data.json') as json_file:
         data = json.load(json_file)
@@ -35,6 +35,7 @@ def test_weather_reading_to_json():
     assert response["datetime"] == '1970-01-01 01:00'
     assert response["wind_speed"] == 7
     assert response["wind_angle"] == 8
+
 
 def test_extract_weather():
     data = {

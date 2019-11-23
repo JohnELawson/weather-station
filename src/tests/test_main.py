@@ -1,4 +1,3 @@
-import pytest
 import main
 from .test_weather import mock_forcast, mock_weather
 
@@ -15,7 +14,7 @@ def test_get_current_weather_api(requests_mock):
     assert response["wind_speed"] == 5.1
 
 
-def test_get_current_weather_api(requests_mock):
+def test_get_forcast_weather_api(requests_mock):
     mock_forcast(requests_mock)
     response = main.get_forcast_weather()
     assert len(response) == 40
