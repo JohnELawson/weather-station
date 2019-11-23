@@ -12,8 +12,8 @@ log = logging.getLogger(__name__)
 
 
 KEY = os.environ.get("WEATHER_API_KEY")
-LAT = "51.52"
-LON = "0.4"
+LAT = os.environ.get("LAT") 
+LON = os.environ.get("LON") 
 PARAMS = f"?lat={LAT}&lon={LON}&APPID={KEY}&units=metric"
 BASE_URL = "https://api.openweathermap.org"
 DATA_ENDPOINT = f"{BASE_URL}/data/2.5/weather{PARAMS}"
@@ -75,4 +75,3 @@ def get_forcast() -> List[WeatherReading]:
     forcast_data = sorted(forcast_data, key=lambda k: int(k['dt']))
     forcast_weather = [extract_weather(i) for i in forcast_data]
     return forcast_weather
-    
