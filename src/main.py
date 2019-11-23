@@ -1,10 +1,15 @@
 import os
+import logging
 import datetime
 import requests
 import cachetools.func
 from dataclasses import dataclass
 from typing import Mapping, Any, List
 from flask_api import FlaskAPI
+
+
+logging.basicConfig(level=logging.DEBUG)
+
 
 KEY = os.environ.get("WEATHER_API_KEY")
 LAT = "51.52"
@@ -13,6 +18,7 @@ PARAMS = f"?lat={LAT}&lon={LON}&APPID={KEY}&units=metric"
 BASE_URL = "https://api.openweathermap.org"
 DATA_ENDPOINT = f"{BASE_URL}/data/2.5/weather{PARAMS}"
 FORCAST_ENDPOINT = f"{BASE_URL}/data/2.5/forecast{PARAMS}"
+
 
 @dataclass
 class WeatherReading:
@@ -25,17 +31,11 @@ class WeatherReading:
     wind_speed: int
     wind_angle: int
     
+
     def to_json(self):
-        return {
-            "temp": self.temp,
-            "pressure": self.pressure,
-            "humidity": self.humidity,
-            "temp_max": self.temp_max,
-            "temp_min": self.temp_min,
-            "datetime": self.get_nice_date(),
-            "wind_speed": self.wind_speed,
-            "wind_angle": self.wind_angle,
-        }
+        self.datetime = self.get_nice_date()
+        return { k:v for (k, v) in vars(self).items() }
+
 
     def get_nice_date(self):
         dt = datetime.datetime.fromtimestamp(self.datetime)
