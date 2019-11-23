@@ -3,16 +3,12 @@ from dataclasses import dataclass
 from typing import Mapping, Any
 
 KEY = "165c09ec420c7f790349861c6d6309d2"
-# KEY = "b1b15e88fa797225412429c1c50c122a1"
 LAT = "51.52"
 LON = "0.4"
 PARAMS = f"?lat={LAT}&lon={LON}&APPID={KEY}&units=metric"
-BASIC_URL = "https://api.openweathermap.org"
-PRO_URL = "https://pro.openweathermap.org"
-DATA_ENDPOINT = f"{BASIC_URL}/data/2.5/weather{PARAMS}"
-FORCAST_ENDPOINT = f"{BASIC_URL}/data/2.5/forecast{PARAMS}"
-# HOURLY_FORCAST_ENDPOINT = f"https://pro.openweathermap.org/data/2.5/forecast/hourly{PARAMS}"
-
+BASE_URL = "https://api.openweathermap.org"
+DATA_ENDPOINT = f"{BASE_URL}/data/2.5/weather{PARAMS}"
+FORCAST_ENDPOINT = f"{BASE_URL}/data/2.5/forecast{PARAMS}"
 
 @dataclass
 class WeatherReading:
@@ -21,6 +17,14 @@ class WeatherReading:
     humidity: int
     temp_min: float
     temp_max: float
+
+    def print_weather(self):
+        print(f"Temp: {self.temp}°C")
+        print(f"Pressure: {self.pressure}hpa")
+        print(f"Humidity: {self.humidity}%")
+        print(f"Max Temp: {self.temp_max}°C")
+        print(f"min Temp: {self.temp_min}°C")
+        print("")
 
 
 def call_api(url: str) -> Mapping[str, Any]:
@@ -39,27 +43,19 @@ def extract_weather(data: Mapping[str, Any]) -> WeatherReading:
     )
 
 
-def print_weather(weather: WeatherReading) -> None:
-    print(f"Temp: {weather.temp}°C")
-    print(f"Pressure: {weather.pressure}hpa")
-    print(f"Humidity: {weather.humidity}%")
-    print(f"Max Temp: {weather.temp_max}°C")
-    print(f"min Temp: {weather.temp_min}°C")
-    print("")
-
-
 def get_weather():
     data = call_api(DATA_ENDPOINT)
     weather = extract_weather(data)
-    print_weather(weather)
+    weather.print_weather()
 
 
 def get_forcast():
     forcast_data = call_api(FORCAST_ENDPOINT)["list"]
-    prediction_data = sorted(forcast_data, key=lambda k: int(k['dt'])) 
-    for prediction in forcast_data:
-        weather = extract_weather(prediction)
-        print_weather(weather)
+    forcast_data = sorted(forcast_data, key=lambda k: int(k['dt']))
+    forcast_weather = [extract_weather(i) for i in forcast_data]
+
+    for prediction in forcast_weather:
+        prediction.print_weather()
 
 
 def main():
