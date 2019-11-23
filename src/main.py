@@ -1,3 +1,4 @@
+import os
 import datetime
 import requests
 import cachetools.func
@@ -5,7 +6,7 @@ from dataclasses import dataclass
 from typing import Mapping, Any, List
 from flask_api import FlaskAPI
 
-KEY = "165c09ec420c7f790349861c6d6309d2"
+KEY = os.environ.get("WEATHER_API_KEY")
 LAT = "51.52"
 LON = "0.4"
 PARAMS = f"?lat={LAT}&lon={LON}&APPID={KEY}&units=metric"
