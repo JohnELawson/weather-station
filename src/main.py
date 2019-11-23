@@ -21,6 +21,8 @@ class WeatherReading:
     temp_min: float
     temp_max: float
     datetime: int
+    wind_speed: int
+    wind_angle: int
     
     def to_json(self):
         return {
@@ -29,7 +31,9 @@ class WeatherReading:
             "humidity": self.humidity,
             "temp_max": self.temp_max,
             "temp_min": self.temp_min,
-            "datetime": self.get_nice_date,
+            "datetime": self.get_nice_date(),
+            "wind_speed": self.wind_speed,
+            "wind_angle": self.wind_angle,
         }
 
     def get_nice_date(self):
@@ -50,7 +54,9 @@ def extract_weather(data: Mapping[str, Any]) -> WeatherReading:
         humidity=data["main"]["humidity"],
         temp_max=data["main"]["temp_max"],
         temp_min=data["main"]["temp_min"],
-        datetime=data["dt"]
+        datetime=data["dt"],
+        wind_speed=data["wind"]["speed"],
+        wind_angle=data["wind"]["deg"],
     )
 
 
@@ -59,7 +65,6 @@ def get_weather() -> WeatherReading:
     data = call_api(DATA_ENDPOINT)
     data["dt"] = datetime.datetime.now().timestamp()
     weather = extract_weather(data)
-    # weather.print_weather()
     return weather
 
 
@@ -68,13 +73,11 @@ def get_forcast() -> List[WeatherReading]:
     forcast_data = call_api(FORCAST_ENDPOINT)["list"]
     forcast_data = sorted(forcast_data, key=lambda k: int(k['dt']))
     forcast_weather = [extract_weather(i) for i in forcast_data]
-    # for prediction in forcast_weather:
-    #     prediction.print_weather()
     return forcast_weather
 
 
+# flask routes
 app = FlaskAPI(__name__)
-
 
 @app.route('/current_weather/')
 def get_current_weather():
@@ -83,7 +86,7 @@ def get_current_weather():
 
 @app.route('/forcast_weather/')
 def get_forcast_weather():
-    return { i: forcast.to_json() for i, forcast in enumerate(get_forcast()) }
+    return [ i.to_json() for i in get_forcast() ]
 
 
 if __name__ == "__main__":
