@@ -14,6 +14,7 @@ log = logging.getLogger(__name__)
 KEY = os.environ.get("WEATHER_API_KEY")
 LAT = os.environ.get("LAT")
 LON = os.environ.get("LON")
+API_CACHE_TTL = 1 * 60
 PARAMS = f"?lat={LAT}&lon={LON}&APPID={KEY}&units=metric"
 BASE_URL = "https://api.openweathermap.org"
 DATA_ENDPOINT = f"{BASE_URL}/data/2.5/weather{PARAMS}"
@@ -29,15 +30,23 @@ class WeatherReading:
     temp_max: float
     datetime: int
     wind_speed: int
-    wind_angle: int
+    wind_direction: int
+
+    def __post_init__(self):
+        self.datetime = self.date_to_str(self.datetime)
+        self.wind_direction = self.get_cardinal_direction(self.wind_direction)
 
     def to_json(self):
-        self.datetime = self.get_nice_date()
         return {k: v for (k, v) in vars(self).items()}
 
-    def get_nice_date(self):
-        dt = datetime.datetime.fromtimestamp(self.datetime)
+    def date_to_str(self, epoch):
+        dt = datetime.datetime.fromtimestamp(epoch)
         return dt.strftime("%Y-%m-%d %H:%M")
+
+    def get_cardinal_direction(self, angle):
+        dirs = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']
+        ix = round(angle / (360. / len(dirs)))
+        return dirs[ix % len(dirs)]
 
 
 def call_api(url: str) -> Mapping[str, Any]:
@@ -57,11 +66,11 @@ def extract_weather(data: Mapping[str, Any]) -> WeatherReading:
         temp_min=data["main"]["temp_min"],
         datetime=data["dt"],
         wind_speed=data["wind"]["speed"],
-        wind_angle=data["wind"]["deg"],
+        wind_direction=data["wind"]["deg"],
     )
 
 
-@cachetools.func.ttl_cache(ttl=1 * 60)
+@cachetools.func.ttl_cache(ttl=API_CACHE_TTL)
 def get_weather() -> WeatherReading:
     log.info("Getting current weather")
     data = call_api(DATA_ENDPOINT)
@@ -71,7 +80,7 @@ def get_weather() -> WeatherReading:
     return weather
 
 
-@cachetools.func.ttl_cache(ttl=1 * 60)
+@cachetools.func.ttl_cache(ttl=API_CACHE_TTL)
 def get_forcast() -> List[WeatherReading]:
     log.info("Getting forcast weather")
     forcast_data = call_api(FORCAST_ENDPOINT)["list"]

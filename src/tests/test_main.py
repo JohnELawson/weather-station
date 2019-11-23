@@ -10,7 +10,7 @@ def test_get_current_weather_api(requests_mock):
     assert response["humidity"] == 93
     assert response["temp_max"] == 9.44
     assert response["temp_min"] == 6.67
-    assert response["wind_angle"] == 100
+    assert response["wind_direction"] == "E"
     assert response["wind_speed"] == 5.1
 
 
@@ -25,4 +25,4 @@ def test_get_forcast_weather_api(requests_mock):
     assert response[0]["temp_min"] == 8.32
     assert response[0]["datetime"] == '2019-11-23 00:00'
     assert response[0]["wind_speed"] == 9.11
-    assert response[0]["wind_angle"] == 124
+    assert response[0]["wind_direction"] == "SE"

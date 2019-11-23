@@ -34,7 +34,18 @@ def test_weather_reading_to_json():
     assert response["temp_max"] == 5
     assert response["datetime"] == '1970-01-01 01:00'
     assert response["wind_speed"] == 7
-    assert response["wind_angle"] == 8
+    assert response["wind_direction"] == "N"
+
+
+def test_get_nice_wind_direction():
+    data = {
+        "N": 2,
+        "NE": 45,
+        "S": 180,
+        "W": 270
+    }
+    for direction, angle in data.items():
+        assert weather.WeatherReading(1, 2, 3, 4, 5, 6, 7, wind_direction=angle).wind_direction == direction
 
 
 def test_extract_weather():
@@ -46,10 +57,10 @@ def test_extract_weather():
             "temp_max": "temp_max",
             "temp_min": "temp_min",
         },
-        "dt": "dt",
+        "dt": 1,
         "wind": {
             "speed": "wind_speed",
-            "deg": "wind_angle",
+            "deg": 100,
         },
     }
     response = weather.extract_weather(data)
@@ -58,9 +69,9 @@ def test_extract_weather():
     assert response.humidity == "humidity"
     assert response.temp_max == "temp_max"
     assert response.temp_min == "temp_min"
-    assert response.datetime == "dt"
+    assert response.datetime == '1970-01-01 01:00'
     assert response.wind_speed == "wind_speed"
-    assert response.wind_angle == "wind_angle"
+    assert response.wind_direction == "E"
 
 
 def test_get_weather(requests_mock):
@@ -71,7 +82,7 @@ def test_get_weather(requests_mock):
     assert response.humidity == 93
     assert response.temp_max == 9.44
     assert response.temp_min == 6.67
-    assert response.wind_angle == 100
+    assert response.wind_direction == "E"
     assert response.wind_speed == 5.1
 
 
@@ -87,4 +98,4 @@ def test_get_forcast(requests_mock):
     assert forcast[0].temp_min == 8.32
     assert forcast[0].datetime == '2019-11-23 00:00'
     assert forcast[0].wind_speed == 9.11
-    assert forcast[0].wind_angle == 124
+    assert forcast[0].wind_direction == "SE"
