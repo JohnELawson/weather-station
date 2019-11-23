@@ -1,6 +1,9 @@
+import datetime
 import requests
+import cachetools.func
 from dataclasses import dataclass
 from typing import Mapping, Any, List
+from flask_api import FlaskAPI
 
 KEY = "165c09ec420c7f790349861c6d6309d2"
 LAT = "51.52"
@@ -17,14 +20,21 @@ class WeatherReading:
     humidity: int
     temp_min: float
     temp_max: float
+    datetime: int
+    
+    def to_json(self):
+        return {
+            "temp": self.temp,
+            "pressure": self.pressure,
+            "humidity": self.humidity,
+            "temp_max": self.temp_max,
+            "temp_min": self.temp_min,
+            "datetime": self.get_nice_date,
+        }
 
-    def print_weather(self):
-        print(f"Temp: {self.temp}°C")
-        print(f"Pressure: {self.pressure}hpa")
-        print(f"Humidity: {self.humidity}%")
-        print(f"Max Temp: {self.temp_max}°C")
-        print(f"min Temp: {self.temp_min}°C")
-        print("")
+    def get_nice_date(self):
+        dt = datetime.datetime.fromtimestamp(self.datetime)
+        return dt.strftime("%Y-%m-%d %H:%M")
 
 
 def call_api(url: str) -> Mapping[str, Any]:
@@ -40,31 +50,41 @@ def extract_weather(data: Mapping[str, Any]) -> WeatherReading:
         humidity=data["main"]["humidity"],
         temp_max=data["main"]["temp_max"],
         temp_min=data["main"]["temp_min"],
+        datetime=data["dt"]
     )
 
 
+@cachetools.func.ttl_cache(ttl=1 * 60)
 def get_weather() -> WeatherReading:
     data = call_api(DATA_ENDPOINT)
+    data["dt"] = datetime.datetime.now().timestamp()
     weather = extract_weather(data)
-    weather.print_weather()
+    # weather.print_weather()
     return weather
 
 
+@cachetools.func.ttl_cache(ttl=1 * 60)
 def get_forcast() -> List[WeatherReading]:
     forcast_data = call_api(FORCAST_ENDPOINT)["list"]
     forcast_data = sorted(forcast_data, key=lambda k: int(k['dt']))
     forcast_weather = [extract_weather(i) for i in forcast_data]
-
-    for prediction in forcast_weather:
-        prediction.print_weather()
-
+    # for prediction in forcast_weather:
+    #     prediction.print_weather()
     return forcast_weather
 
 
-def main():
-    get_weather()
-    get_forcast()
+app = FlaskAPI(__name__)
+
+
+@app.route('/current_weather/')
+def get_current_weather():
+    return get_weather().to_json()
+
+
+@app.route('/forcast_weather/')
+def get_forcast_weather():
+    return { i: forcast.to_json() for i, forcast in enumerate(get_forcast()) }
 
 
 if __name__ == "__main__":
-    main()
+   app.run(debug=True)
