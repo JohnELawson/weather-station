@@ -3,8 +3,9 @@ import pytest
 import requests
 import main
 
-url = "https://api.openweathermap.org"
-data_url = f"{url}/data/2.5/weather"
+base_url = "https://api.openweathermap.org"
+data_url = f"{base_url}/data/2.5/weather"
+forcast_url = f"{base_url}/data/2.5/forecast"
 
 
 def test_call_api(requests_mock):
@@ -41,3 +42,16 @@ def test_get_weather(requests_mock):
     assert weather.humidity == 93
     assert weather.temp_max == 9.44
     assert weather.temp_min == 6.67
+
+
+def test_get_forcast(requests_mock):
+    with open('./tests/data/forcast_data.json') as json_file:
+        data = json.load(json_file)
+        requests_mock.get(forcast_url, json=data)
+    forcast = main.get_forcast()
+    assert len(forcast) == 40
+    assert forcast[0].temp == 8.32
+    assert forcast[0].pressure == 994
+    assert forcast[0].humidity == 80
+    assert forcast[0].temp_max == 9.32
+    assert forcast[0].temp_min == 8.32
