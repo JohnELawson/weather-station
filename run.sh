@@ -1,7 +1,10 @@
 #!/bin/bash
 
-source ./env/bin/activate
-./exports.sh
-python3 main.py
+# pip install virtualenv
+# source ./env/bin/activate
+# pip install -r requirements.txt
+. ./exports.sh
 
-/usr/bin/firefox 127.0.0.1:5000
+DISPLAY=:0 chromium-browser -start-maximized http://127.0.0.1:5000/ &
+
+python3 main.py

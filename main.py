@@ -2,6 +2,7 @@ import logging
 from flask import Flask, render_template
 from flask_cors import CORS
 
+import bmc280.bmc280 as bmc280
 from weather import get_weather, get_forcast
 
 logging.basicConfig(level=logging.DEBUG)
@@ -31,7 +32,8 @@ def get_forcast_weather():
 
 @app.route('/indoors_weather/')
 def get_indoors_weather():
-    return get_weather().to_json()
+    (temperature,pressure)=bmc280.readBmp180()
+    return {"temp": temperature, "pressure": pressure}
 
 
 if __name__ == "__main__":
