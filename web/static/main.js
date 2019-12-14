@@ -8,6 +8,9 @@ CURRENT_ENDPOINT = API_BASE + "/current_weather/";
 FORCAST_ENDPOINT = API_BASE + "/forcast_weather/";
 INDOORS_ENDPOINT = API_BASE + "/indoors_weather/";
 
+var indoor_temp_max = -99999;
+var indoor_temp_min = 99999;
+
 
 async function main(){
     // first init
@@ -18,6 +21,7 @@ async function main(){
     // timers
     var dateTimer = setInterval(displayDate,1000);
     var currentWeatherTimer = setInterval(get_current_weather,10000);
+    var indoorsWeatherTimer = setInterval(get_indoors_weather,10000);
 
     // get_forcast_weather();
     
@@ -40,8 +44,18 @@ async function get_current_weather(){
 async function get_indoors_weather(){
     console.log("checking for indoors weather");
     const data = await getApi(INDOORS_ENDPOINT);
+
+    if(data.temp > indoor_temp_max){
+        indoor_temp_max = data.temp;
+    }
+    if(data.temp < indoor_temp_min){
+        indoor_temp_min = data.temp;
+    }
+
     setHtml("indoor_temp", data.temp);
     setHtml("indoor_pressure", data.pressure);
+    setHtml("indoor_temp_max", "Max: " + indoor_temp_max);
+    setHtml("indoor_temp_min", "Min: "  + indoor_temp_min);
 }
 
 // async function get_forcast_weather(){
