@@ -1,5 +1,13 @@
 import main
+import pytest
 from .test_weather import mock_forcast, mock_weather
+
+
+@pytest.fixture(autouse=True)
+def set_env_vars(monkeypatch):
+    monkeypatch.setenv("LON", "111")
+    monkeypatch.setenv("LAT", "222")
+    monkeypatch.setenv("WEATHER_API_KEY", "333")
 
 
 def test_get_current_weather_api(requests_mock):

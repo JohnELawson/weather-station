@@ -1,11 +1,17 @@
 import json
 import pytest
-import requests
 import weather
 
 base_url = "https://api.openweathermap.org"
 data_url = f"{base_url}/data/2.5/weather"
 forcast_url = f"{base_url}/data/2.5/forecast"
+
+
+@pytest.fixture(autouse=True)
+def set_env_vars(monkeypatch):
+    monkeypatch.setenv("LON", "111")
+    monkeypatch.setenv("LAT", "222")
+    monkeypatch.setenv("WEATHER_API_KEY", "333")
 
 
 def mock_weather(requests_mock):
@@ -28,8 +34,8 @@ def test_call_api(requests_mock):
 
 def test_weather_reading_to_json():
     response = weather.WeatherReading(1, 2, 3, 4, 5, 6, 7, 8).to_json()
-    assert response["pressure"] == 2
-    assert response["humidity"] == 3
+    assert response["humidity"] == 2
+    assert response["pressure"] == 3
     assert response["temp_min"] == 4
     assert response["temp_max"] == 5
     assert response["datetime"] == '1970-01-01 01:00'
@@ -45,7 +51,10 @@ def test_get_nice_wind_direction():
         "W": 270
     }
     for direction, angle in data.items():
-        assert weather.WeatherReading(1, 2, 3, 4, 5, 6, 7, wind_direction=angle).wind_direction == direction
+        assert weather.WeatherReading(
+            1, 2, 3, 4, 5, 6, 7,
+            wind_direction=angle
+        ).wind_direction == direction
 
 
 def test_extract_weather():
@@ -62,6 +71,14 @@ def test_extract_weather():
             "speed": "wind_speed",
             "deg": 100,
         },
+        "weather": [
+            {
+                "id": 804,
+                "main": "Clouds",
+                "description": "overcast clouds",
+                "icon": "04n"
+            }
+        ],
     }
     response = weather.extract_weather(data)
     assert response.temp == "temp"

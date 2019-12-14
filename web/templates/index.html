@@ -7,13 +7,94 @@
         <title>Weather</title>
     </head>
     <body>
-        <div id="current_temp"></div>
-        <div id="current_pressure"></div>
-        <div id="current_humidity"></div>
-        <div id="current_wind_speed"></div>
-        <div id="current_wind_direction"></div>
-        <div id="current_temp_min"></div>
-        <div id="current_temp_max"></div>
-        <div id="current_datetime"></div>
+
+        <div id="date_time_container">
+            <div id="current_time"></div>
+        </div>
+
+        <div class="row">
+
+            <div id="current_weather_container">
+
+                <div class="container_title">
+                    Outside:
+                </div>
+
+                <div class="current_container">
+                    <div id="current_temp" class="temp"></div>
+                    <div class="units">°C</div>
+                </div>
+
+                <div class="current_container">
+                    <div id="current_description"></div>
+                </div>
+
+                <div class="current_container">
+                    <div id="current_pressure"></div>
+                    <div class="units">&nbsp;hPa</div>
+                </div>
+
+                <div class="current_container">
+                    <div id="current_humidity"></div>
+                    <div class="units">%</div>
+                </div>
+
+                <div class="current_container">
+                    <div id="current_wind_speed"></div>
+                    <div class="units">&nbsp;mph</div>
+                    &nbsp;
+                    <div id="current_wind_direction"></div>
+                </div>
+
+                <div class="current_container">
+                    <div id="current_temp_max"></div>
+                    <div class="units">&nbsp;°C</div>
+                    &nbsp;
+                    <div id="current_temp_min"></div>
+                    <div class="units">&nbsp;°C</div>
+                </div>
+
+            </div>
+
+            <div id="indoors_weather_container">
+
+                <div class="container_title">
+                    Inside:
+                </div>
+
+                <div class="current_container">
+                    <div id="indoor_temp" class="temp"></div>
+                    <div class="units">&nbsp;°C</div>
+                </div>
+
+                <div class="current_container">
+                    Pressure: &nbsp;
+                    <div id="indoor_pressure"></div>
+                    <div class="units">&nbsp;hPa</div>
+                </div>
+
+                <!-- <div class="current_container">
+                    Humidity: &nbsp;
+                    <div id="current_humidity"></div>
+                    <div class="units">%</div>
+                </div> -->
+
+                <!-- <div class="current_container">
+                    Max: &nbsp;
+                    <div id="current_temp_max"></div>
+                    <div class="units">&nbsp;°C</div>
+                    &nbsp; Min: &nbsp;
+                    <div id="current_temp_min"></div>
+                    <div class="units">&nbsp;°C</div>
+                </div> -->
+
+            </div>
+
+        </div>
+
+        <div id="forcast_weather_container">
+            
+        </div>
+
     </body>
 </html>

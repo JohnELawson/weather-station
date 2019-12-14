@@ -14,6 +14,10 @@ log = logging.getLogger(__name__)
 KEY = os.environ.get("WEATHER_API_KEY")
 LAT = os.environ.get("LAT")
 LON = os.environ.get("LON")
+if not (KEY and LAT and LON):
+    raise Exception("Missing env vars!")
+
+
 API_CACHE_TTL = 1 * 60
 PARAMS = f"?lat={LAT}&lon={LON}&APPID={KEY}&units=metric"
 BASE_URL = "https://api.openweathermap.org"
@@ -24,13 +28,14 @@ FORCAST_ENDPOINT = f"{BASE_URL}/data/2.5/forecast{PARAMS}"
 @dataclass
 class WeatherReading:
     temp: float
-    pressure: int
     humidity: int
-    temp_min: float
-    temp_max: float
-    datetime: int
-    wind_speed: int
-    wind_direction: int
+    pressure: int = None
+    temp_min: float = None
+    temp_max: float = None
+    datetime: int = None
+    wind_speed: int = None
+    wind_direction: int = None
+    description: str = None
 
     def __post_init__(self):
         self.datetime = self.date_to_str(self.datetime)
@@ -44,7 +49,9 @@ class WeatherReading:
         return dt.strftime("%Y-%m-%d %H:%M")
 
     def get_cardinal_direction(self, angle):
-        dirs = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']
+        dirs = [
+            'N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE',
+            'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW']
         ix = round(angle / (360. / len(dirs)))
         return dirs[ix % len(dirs)]
 
@@ -53,6 +60,21 @@ def call_api(url: str) -> Mapping[str, Any]:
     response = requests.get(url)
     log.debug("Api status code: %s", response.status_code)
     log.debug("Raw api response: %s", response)
+
+    if response.status_code != 200:
+        log.error("Invalid api response")
+
+        if response.status_code == 429:
+            log.error("Api limit reached for free teir - 60 calls per min.")
+
+        if response.status_code == 404:
+            log.error("Invalid url parameters.")
+
+        if response.status_code == 401:
+            log.error("Invalid api key.")
+
+        raise Exception(response.text)
+
     data = response.json()
     return data
 
@@ -67,6 +89,7 @@ def extract_weather(data: Mapping[str, Any]) -> WeatherReading:
         datetime=data["dt"],
         wind_speed=data["wind"]["speed"],
         wind_direction=data["wind"]["deg"],
+        description=data["weather"][0]["description"]
     )
 
 
