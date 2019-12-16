@@ -2,7 +2,7 @@ import logging
 from flask import Flask, render_template
 from flask_cors import CORS
 
-from weather import get_weather, get_forcast
+from weather import get_weather, get_forcast, get_indoors
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ def get_forcast_weather():
 
 @app.route('/indoors_weather/')
 def get_indoors_weather():
-    return get_indoors_weather().to_json()
+    return get_indoors().to_json()
 
 
 if __name__ == "__main__":

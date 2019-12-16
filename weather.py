@@ -115,7 +115,7 @@ def get_forcast() -> List[WeatherReading]:
     return forcast_weather
 
 
-def get_indoors_weather() -> WeatherReading:
+def get_indoors() -> WeatherReading:
     log.info("Getting indoors weather")
 
     try:
