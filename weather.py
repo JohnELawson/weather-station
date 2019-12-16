@@ -6,6 +6,7 @@ import cachetools.func
 from dataclasses import dataclass
 from typing import Mapping, Any, List
 
+from smbus import SMBus
 from bmp280 import BMP280
 
 
@@ -25,6 +26,9 @@ PARAMS = f"?lat={LAT}&lon={LON}&APPID={KEY}&units=metric"
 BASE_URL = "https://api.openweathermap.org"
 DATA_ENDPOINT = f"{BASE_URL}/data/2.5/weather{PARAMS}"
 FORCAST_ENDPOINT = f"{BASE_URL}/data/2.5/forecast{PARAMS}"
+
+bus = SMBus(1)
+bmp280 = BMP280(i2c_dev=bus)
 
 
 @dataclass
@@ -118,16 +122,12 @@ def get_forcast() -> List[WeatherReading]:
 def get_indoors() -> WeatherReading:
     log.info("Getting indoors weather")
 
-    try:
-        from smbus2 import SMBus
-    except ImportError:
-        from smbus import SMBus
-
-    bus = SMBus(1)
-    bmp280 = BMP280(i2c_dev=bus)
-
     temperature = bmp280.get_temperature()
     pressure = bmp280.get_pressure()
     log.debug("Raw indoors weather: {:05.2f}*C {:05.2f}hPa".format(temperature, pressure))
 
-    return WeatherReading(temperature, pressure)
+    # return WeatherReading(temperature, pressure)
+    return {
+        "temp": temperature,
+        "pressure": pressure,
+    }
