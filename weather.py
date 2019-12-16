@@ -119,7 +119,7 @@ def get_forcast() -> List[WeatherReading]:
     return forcast_weather
 
 
-def get_indoors() -> WeatherReading:
+def get_indoors():
     log.info("Getting indoors weather")
 
     temperature = bmp280.get_temperature()

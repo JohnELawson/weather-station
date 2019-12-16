@@ -31,7 +31,7 @@ def get_forcast_weather():
 
 @app.route('/indoors_weather/')
 def get_indoors_weather():
-    return get_indoors().to_json()
+    return get_indoors()
 
 
 if __name__ == "__main__":
