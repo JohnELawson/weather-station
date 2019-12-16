@@ -1,9 +1,9 @@
 #!/bin/bash
 
-# pip install virtualenv
-# source ./env/bin/activate
+cd ~/Documents/weather-station
+source env/bin/activate
 # pip install -r requirements.txt
-. ./exports.sh
+cat exports.txt | while read line; do export $line; done
 
 DISPLAY=:0 chromium-browser -start-maximized http://127.0.0.1:5000/ &
 

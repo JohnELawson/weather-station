@@ -14,8 +14,8 @@ body{
     background-repeat: repeat;
     background-attachment: scroll;
     background-image: linear-gradient(to right bottom,
-    rgb(60, 192, 254) 20%,
-    rgb(0, 102, 255));
+    rgb(2, 149, 218) 20%,
+    rgb(2, 68, 167));
     background-size: auto;
     background-origin: padding-box;
     background-clip: border-box;
@@ -24,6 +24,7 @@ body{
     font-family: Roboto, sans-serif;
     font-weight: 300;
     font-size: 2em;
+    margin: 0;
 }
 #current_weather_container{
     display: flex;

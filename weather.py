@@ -6,6 +6,8 @@ import cachetools.func
 from dataclasses import dataclass
 from typing import Mapping, Any, List
 
+from bmp280 import BMP280
+
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -111,3 +113,21 @@ def get_forcast() -> List[WeatherReading]:
     forcast_data = sorted(forcast_data, key=lambda k: int(k['dt']))
     forcast_weather = [extract_weather(i) for i in forcast_data]
     return forcast_weather
+
+
+def get_indoors_weather() -> WeatherReading:
+    log.info("Getting indoors weather")
+
+    try:
+        from smbus2 import SMBus
+    except ImportError:
+        from smbus import SMBus
+
+    bus = SMBus(1)
+    bmp280 = BMP280(i2c_dev=bus)
+
+    temperature = bmp280.get_temperature()
+    pressure = bmp280.get_pressure()
+    log.debug("Raw indoors weather: {:05.2f}*C {:05.2f}hPa".format(temperature, pressure))
+
+    return WeatherReading(temperature, pressure)
