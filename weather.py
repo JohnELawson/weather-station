@@ -128,6 +128,6 @@ def get_indoors():
 
     # return WeatherReading(temperature, pressure)
     return {
-        "temp": temperature,
-        "pressure": pressure,
+        "temp": round(temperature, 2),
+        "pressure": round(pressure, 2),
     }
