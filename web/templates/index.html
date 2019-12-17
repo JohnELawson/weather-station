@@ -1,4 +1,5 @@
 <html>
+
     <head>
         <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
         <meta content="utf-8" http-equiv="encoding">
@@ -6,85 +7,131 @@
         <link rel="stylesheet" href="style.css">
         <title>Weather</title>
     </head>
-    <body>
+
+    <body class="column">
 
         <div id="date_time_container">
             <div id="current_time"></div>
         </div>
 
-        <div class="row">
+        <div class="row space-between">
 
-            <div id="current_weather_container">
+            <div id="current_weather_container" class="column center">
 
                 <div class="container_title">
                     Outside:
                 </div>
 
-                <div class="current_container">
-                    <div id="current_temp" class="temp"></div>
-                    <div class="units">°C</div>
+                <!-- outdoors temp humid -->
+                <div class="row space-between">
+                    <div class="column">
+                        <div class="container_sub_title">Temp:</div>
+                        <div class="row">
+                            <div id="current_temp" class="value"></div>
+                            <div class="units"></div>
+                        </div>
+                    </div>
+
+                    <div class="column">
+                        <div class="container_sub_title">Humidity:</div>
+                        <div class="row">
+                            <div id="current_humidity" class="value"></div>
+                            <div class="units">%</div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="current_container">
-                    <div id="current_description"></div>
+                <!-- outdoors temp min max -->
+                <div class="row space-between">
+                    <div class="column">
+                        <div class="container_sub_title">Max:</div>
+                        <div class="row">
+                            <div id="current_temp_max" class="value"></div>
+                            <div class="units">°C</div>
+                        </div>
+                    </div>
+
+                    <div class="column">
+                        <div class="container_sub_title">Min:</div>
+                        <div class="row">
+                            <div id="current_temp_min" class="value"></div>
+                            <div class="units">°C</div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="current_container">
-                    <div id="current_pressure"></div>
-                    <div class="units">&nbsp;hPa</div>
-                </div>
+                <!-- wind  -->
+                <div class="row space-between">
+                    <div class="column">
+                        <div class="container_sub_title">Wind:</div>
+                        <div class="row">
+                            <div id="current_wind_speed" class="value"></div>
+                            <div class="units">mph</div>
+                        </div>
+                    </div>
 
-                <div class="current_container">
-                    <div id="current_humidity"></div>
-                    <div class="units">%</div>
-                </div>
-
-                <div class="current_container">
-                    <div id="current_wind_speed"></div>
-                    <div class="units">&nbsp;mph</div>
-                    &nbsp;
-                    <div id="current_wind_direction"></div>
-                </div>
-
-                <div class="current_container">
-                    <div id="current_temp_max"></div>
-                    <div class="units">&nbsp;°C</div>
-                    &nbsp;
-                    <div id="current_temp_min"></div>
-                    <div class="units">&nbsp;°C</div>
+                    <div class="column">
+                        <div class="container_sub_title">Direction:</div>
+                        <div class="row">
+                            <div id="current_wind_direction" class="value"></div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
 
-            <div id="indoors_weather_container">
-
+            <div id="indoors_weather_container" class="column center">
                 <div class="container_title">
                     Inside:
                 </div>
 
-                <div class="current_container">
-                    <div id="indoor_temp" class="temp"></div>
-                    <div class="units">&nbsp;°C</div>
+                <!-- indoors temp humid -->
+                <div class="row space-between">
+                    <div class="column">
+                        <div class="container_sub_title">Temp:</div>
+                        <div class="row">
+                            <div id="indoor_temp" class="value"></div>
+                            <div class="units">°C</div>
+                        </div>
+                    </div>
+
+                    <div class="column">
+                        <div class="container_sub_title">Humidity:</div>
+                        <div class="row">
+                            <div id="indoor_humidity" class="value"></div>
+                            <div class="units">%</div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="current_container">
-                    Pressure: &nbsp;
-                    <div id="indoor_pressure"></div>
-                    <div class="units">&nbsp;hPa</div>
+                <!-- indoors max min temp -->
+                <div class="row space-between">
+                    <div class="column">
+                        <div class="container_sub_title">Max:</div>
+                        <div class="row">
+                            <div id="indoor_temp_max" class="value"></div>
+                            <div class="units">°C</div>
+                        </div>
+                    </div>
+
+                    <div class="column">
+                        <div class="container_sub_title">Min:</div>
+                        <div class="row">
+                            <div id="indoor_temp_min" class="value"></div>
+                            <div class="units">°C</div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- <div class="current_container">
-                    Humidity: &nbsp;
-                    <div id="current_humidity"></div>
-                    <div class="units">%</div>
-                </div> -->
-
-                <div class="current_container">
-                    <div id="indoor_temp_max"></div>
-                    <div class="units">&nbsp;°C</div>
-                    &nbsp;
-                    <div id="indoor_temp_min"></div>
-                    <div class="units">&nbsp;°C</div>
+                <!-- pressure -->
+                <div class="row space-between">
+                    <div class="column">
+                        <div class="container_sub_title">Pressure:</div>
+                        <div class="row">
+                            <div id="current_pressure" class="value"></div>
+                            <div class="units">hpa</div>
+                        </div>
+                    </div>
                 </div>
 
             </div>

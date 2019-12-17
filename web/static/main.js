@@ -32,13 +32,13 @@ async function get_current_weather(){
     const data = await getApi(CURRENT_ENDPOINT);
     // console.log(data)
     setHtml("current_temp", data.temp + " ");
-    setHtml("current_description", data.description)
-    setHtml("current_pressure", "Pressure: " + data.pressure);
-    setHtml("current_humidity", "Humidity: " + data.humidity);
-    setHtml("current_wind_speed", "Wind: " + data.wind_speed);
+    // setHtml("current_description", data.description)
+    setHtml("current_pressure", data.pressure);
+    setHtml("current_humidity", data.humidity);
+    setHtml("current_wind_speed", data.wind_speed);
     setHtml("current_wind_direction", data.wind_direction);
-    setHtml("current_temp_max", "Max: " + data.temp_max);
-    setHtml("current_temp_min", "Min: " + data.temp_max);
+    setHtml("current_temp_max", data.temp_max);
+    setHtml("current_temp_min", data.temp_max);
 }
 
 async function get_indoors_weather(){
@@ -53,9 +53,9 @@ async function get_indoors_weather(){
     }
 
     setHtml("indoor_temp", data.temp);
-    setHtml("indoor_pressure", data.pressure);
-    setHtml("indoor_temp_max", "Max: " + indoor_temp_max);
-    setHtml("indoor_temp_min", "Min: "  + indoor_temp_min);
+    setHtml("indoor_humidity", data.pressure);
+    setHtml("indoor_temp_max", indoor_temp_max);
+    setHtml("indoor_temp_min", indoor_temp_min);
 }
 
 // async function get_forcast_weather(){
