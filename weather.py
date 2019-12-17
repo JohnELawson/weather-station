@@ -6,9 +6,6 @@ import cachetools.func
 from dataclasses import dataclass
 from typing import Mapping, Any, List
 
-from smbus import SMBus
-from bmp280 import BMP280
-
 
 logging.basicConfig(level=logging.DEBUG)
 log = logging.getLogger(__name__)
@@ -26,9 +23,6 @@ PARAMS = f"?lat={LAT}&lon={LON}&APPID={KEY}&units=metric"
 BASE_URL = "https://api.openweathermap.org"
 DATA_ENDPOINT = f"{BASE_URL}/data/2.5/weather{PARAMS}"
 FORCAST_ENDPOINT = f"{BASE_URL}/data/2.5/forecast{PARAMS}"
-
-bus = SMBus(1)
-bmp280 = BMP280(i2c_dev=bus)
 
 
 @dataclass
@@ -85,17 +79,35 @@ def call_api(url: str) -> Mapping[str, Any]:
     return data
 
 
+def if_avaliable(data, var_name) -> str:
+    if var_name in data:
+        return data[var_name]
+    else:
+        return 0.0
+
+
 def extract_weather(data: Mapping[str, Any]) -> WeatherReading:
+    temp = if_avaliable(data["main"], "temp")
+    pressure = if_avaliable(data["main"], "pressure")
+    humidity = if_avaliable(data["main"], "humidity")
+    temp_max = if_avaliable(data["main"], "temp_max")
+    temp_min = if_avaliable(data["main"], "temp_min")
+    datetime = if_avaliable(data, "dt")
+    wind_speed = if_avaliable(data["wind"], "speed")
+    wind_direction = if_avaliable(data["wind"], "direction")
+    description = if_avaliable(data["weather"][0], "description")
+
+
     return WeatherReading(
-        temp=data["main"]["temp"],
-        pressure=data["main"]["pressure"],
-        humidity=data["main"]["humidity"],
-        temp_max=data["main"]["temp_max"],
-        temp_min=data["main"]["temp_min"],
-        datetime=data["dt"],
-        wind_speed=data["wind"]["speed"],
-        wind_direction=data["wind"]["deg"],
-        description=data["weather"][0]["description"]
+        temp=temp,
+        pressure=pressure,
+        humidity=humidity,
+        temp_max=temp_max,
+        temp_min=temp_min,
+        datetime=datetime,
+        wind_speed=wind_speed,
+        wind_direction=wind_direction,
+        description=description,
     )
 
 
@@ -122,8 +134,19 @@ def get_forcast() -> List[WeatherReading]:
 def get_indoors():
     log.info("Getting indoors weather")
 
-    temperature = bmp280.get_temperature()
-    pressure = bmp280.get_pressure()
+    if os.environ.get("RPI") == "True":
+        from smbus import SMBus
+        from bmp280 import BMP280
+        bus = SMBus(1)
+        bmp280 = BMP280(i2c_dev=bus)
+        bmp280.setup(mode="forced")
+        temperature = bmp280.get_temperature()
+        pressure = bmp280.get_pressure()
+
+    else:
+        temperature = 0.0
+        pressure = 0.0
+
     log.debug("Raw indoors weather: {:05.2f}*C {:05.2f}hPa".format(temperature, pressure))
 
     # return WeatherReading(temperature, pressure)
