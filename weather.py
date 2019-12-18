@@ -29,13 +29,14 @@ FORCAST_ENDPOINT = f"{BASE_URL}/data/2.5/forecast{PARAMS}"
 class WeatherReading:
     temp: float
     humidity: int
-    pressure: int = None
-    temp_min: float = None
-    temp_max: float = None
-    datetime: int = None
-    wind_speed: int = None
-    wind_direction: int = None
-    description: str = None
+    pressure: int = 0
+    temp_min: float = 0.0
+    temp_max: float = 0.0
+    datetime: int = 0
+    wind_speed: int = 0.0
+    wind_direction: str = "N/A"
+    description: str = ""
+    img_id: str = ""
 
     def __post_init__(self):
         self.datetime = self.date_to_str(self.datetime)
@@ -79,35 +80,22 @@ def call_api(url: str) -> Mapping[str, Any]:
     return data
 
 
-def if_avaliable(data, var_name) -> str:
-    if var_name in data:
-        return data[var_name]
-    else:
-        return 0.0
-
-
 def extract_weather(data: Mapping[str, Any]) -> WeatherReading:
-    temp = if_avaliable(data["main"], "temp")
-    pressure = if_avaliable(data["main"], "pressure")
-    humidity = if_avaliable(data["main"], "humidity")
-    temp_max = if_avaliable(data["main"], "temp_max")
-    temp_min = if_avaliable(data["main"], "temp_min")
-    datetime = if_avaliable(data, "dt")
-    wind_speed = if_avaliable(data["wind"], "speed")
-    wind_direction = if_avaliable(data["wind"], "direction")
-    description = if_avaliable(data["weather"][0], "description")
-
+    wind_direction = "N/A"
+    if "deg" in data["wind"]:
+        wind_direction = data["wind"]["deg"]
 
     return WeatherReading(
-        temp=temp,
-        pressure=pressure,
-        humidity=humidity,
-        temp_max=temp_max,
-        temp_min=temp_min,
-        datetime=datetime,
-        wind_speed=wind_speed,
+        temp=data["main"]["temp"],
+        pressure=data["main"]["pressure"],
+        humidity=data["main"]["humidity"],
+        temp_max=data["main"]["temp_max"],
+        temp_min=data["main"]["temp_min"],
+        datetime=data["dt"],
+        wind_speed=data["wind"]["speed"],
         wind_direction=wind_direction,
-        description=description,
+        description=data["weather"][0]["description"],
+        img_id=data["weather"][0]["icon"],
     )
 
 

@@ -3,10 +3,11 @@ window.addEventListener('load', function() {
     main();
 });
 
-API_BASE = "http://127.0.0.1:5000";
-CURRENT_ENDPOINT = API_BASE + "/current_weather/";
-FORCAST_ENDPOINT = API_BASE + "/forcast_weather/";
-INDOORS_ENDPOINT = API_BASE + "/indoors_weather/";
+const API_BASE = "http://127.0.0.1:5000";
+const CURRENT_ENDPOINT = API_BASE + "/current_weather/";
+const FORCAST_ENDPOINT = API_BASE + "/forcast_weather/";
+const INDOORS_ENDPOINT = API_BASE + "/indoors_weather/";
+const API_IMAGE = "https://openweathermap.org/img/wn/";
 
 var indoor_temp_max = -99999;
 var indoor_temp_min = 99999;
@@ -32,19 +33,21 @@ async function get_current_weather(){
     const data = await getApi(CURRENT_ENDPOINT);
     // console.log(data)
     setHtml("current_temp", data.temp + " ");
-    // setHtml("current_description", data.description)
+    setHtml("current_description", data.description)
     setHtml("current_pressure", data.pressure);
     setHtml("current_humidity", data.humidity);
     setHtml("current_wind_speed", data.wind_speed);
     setHtml("current_wind_direction", data.wind_direction);
     setHtml("current_temp_max", data.temp_max);
-    setHtml("current_temp_min", data.temp_max);
+    setHtml("current_temp_min", data.temp_min);
+    
+    document.getElementById("current_weather_icon").src = API_IMAGE + data.img_id + "@2x.png";
 }
 
 async function get_indoors_weather(){
     console.log("checking for indoors weather");
     const data = await getApi(INDOORS_ENDPOINT);
-
+    // console.log(data)
     if(data.temp > indoor_temp_max){
         indoor_temp_max = data.temp;
     }
