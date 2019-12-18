@@ -56,7 +56,7 @@ async function get_indoors_weather(){
     }
 
     setHtml("indoor_temp", data.temp);
-    setHtml("indoor_humidity", data.pressure);
+    setHtml("indoor_humidity", data.temp);
     setHtml("indoor_temp_max", indoor_temp_max);
     setHtml("indoor_temp_min", indoor_temp_min);
 }

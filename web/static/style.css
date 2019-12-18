@@ -58,16 +58,16 @@ body{
     font-size: 1.2em;
 }
 #current_weather_container{
-    width: 35%;
+    width: 38%;
     margin: 10px;
 }
 #indoors_weather_container{
     margin: 10px;
-    width: 35%;
+    width: 38%;
 }
 #weather_image_container{
     margin: 10px;
-    width: 30%;
+    width: 25%;
 }
 .row{
     display: flex;
@@ -82,4 +82,10 @@ body{
 }
 .center {
     justify-content: center;
+}
+.fifty {
+    width: 50%;
+}
+.right-text {
+    text-align: right;
 }
