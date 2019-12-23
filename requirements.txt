@@ -3,5 +3,4 @@ flask_cors
 requests
 cachetools
 adafruit-circuitpython-dht
-libgpiod2
 board
