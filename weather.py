@@ -3,6 +3,8 @@ import logging
 import datetime
 import requests
 import cachetools.func
+import adafruit_dht
+from board import D17 as dht_pin
 from dataclasses import dataclass
 from typing import Mapping, Any, List
 
@@ -119,19 +121,27 @@ def get_forcast() -> List[WeatherReading]:
     return forcast_weather
 
 
+def get_dht11_readings(attempts=3) -> (float, float):
+    i = 0
+    while i < attempts:
+        try:
+            dht_device = adafruit_dht.DHT11(dht_pin)
+            temperature = dht_device.temperature
+            pressure = dht_device.humidity
+            return round(temperature, 2), round(pressure, 2)
+        except RuntimeError as e:
+            i += 1
+            log.error("Error reading dht11: %s", e.args[0])
+    return 0.0, 0.0
+
+
 def get_indoors():
     log.info("Getting indoors weather")
 
     if os.environ.get("RPI") == "True":
-        from smbus import SMBus
-        from bmp280 import BMP280
-        bus = SMBus(1)
-        bmp280 = BMP280(i2c_dev=bus)
-        # bmp280.setup(mode="forced")
-        temperature = bmp280.get_temperature()
-        pressure = bmp280.get_pressure()
-
+        temperature, pressure = get_dht11_readings()
     else:
+        # TODO
         temperature = 0.0
         pressure = 0.0
 
@@ -139,6 +149,6 @@ def get_indoors():
 
     # return WeatherReading(temperature, pressure)
     return {
-        "temp": round(temperature, 2),
-        "pressure": round(pressure, 2),
+        "temp": temperature,
+        "pressure": pressure
     }

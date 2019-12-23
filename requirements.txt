@@ -2,5 +2,6 @@ flask
 flask_cors
 requests
 cachetools
-smbus
-bmp280
+adafruit-circuitpython-dht
+libgpiod2
+board
