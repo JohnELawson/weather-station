@@ -125,17 +125,17 @@ def get_forcast() -> List[WeatherReading]:
 def get_dht11_readings(attempts=3) -> (float, float):
     i = 0
     while i < attempts:
+        log.debug("Trying to read dht11, attempt: %s", i)
         try:
             pin = board.D17
-            # dht_device = adafruit_dht.DHT11(pin)
-            dht_device = adafruit_dht.DHTBase(True, pin, 25000)
+            dhtDevice = adafruit_dht.DHT11(pin)
             temperature = dht_device.temperature
             pressure = dht_device.humidity
             return round(temperature, 2), round(pressure, 2)
         except RuntimeError as e:
             i += 1
             log.error("Error reading dht11: %s", e.args[0])
-            time.sleep(2)
+            time.sleep(2.5)
     return 0.0, 0.0
 
 
