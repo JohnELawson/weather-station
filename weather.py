@@ -156,3 +156,6 @@ def get_indoors():
         "temp": temperature,
         "pressure": pressure
     }
+
+if __name__ == "__main__":
+    get_indoors()
