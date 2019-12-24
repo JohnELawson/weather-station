@@ -28,6 +28,11 @@ DATA_ENDPOINT = f"{BASE_URL}/data/2.5/weather{PARAMS}"
 FORCAST_ENDPOINT = f"{BASE_URL}/data/2.5/forecast{PARAMS}"
 
 
+# if os.environ.get("RPI") == "True":
+pin = board.D14
+dht_device = adafruit_dht.DHT11(pin)
+
+
 @dataclass
 class WeatherReading:
     temp: float
@@ -127,8 +132,6 @@ def get_dht11_readings(attempts=3) -> (float, float):
     while i < attempts:
         log.debug("Trying to read dht11, attempt: %s", i)
         try:
-            pin = board.D17
-            dhtDevice = adafruit_dht.DHT11(pin)
             temperature = dht_device.temperature
             pressure = dht_device.humidity
             return round(temperature, 2), round(pressure, 2)
@@ -142,12 +145,11 @@ def get_dht11_readings(attempts=3) -> (float, float):
 def get_indoors():
     log.info("Getting indoors weather")
 
-    if os.environ.get("RPI") == "True":
-        temperature, pressure = get_dht11_readings()
-    else:
-        # TODO
-        temperature = 0.0
-        pressure = 0.0
+    temperature, pressure = get_dht11_readings()
+    # else:
+    #     # TODO
+    #     temperature = 0.0
+    #     pressure = 0.0
 
     log.debug("Raw indoors weather: {:05.2f}*C {:05.2f}hPa".format(temperature, pressure))
 
