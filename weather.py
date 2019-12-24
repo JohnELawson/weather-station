@@ -5,7 +5,6 @@ import datetime
 import requests
 import cachetools.func
 import adafruit_dht
-import board
 from dataclasses import dataclass
 from typing import Mapping, Any, List
 
@@ -27,10 +26,8 @@ BASE_URL = "https://api.openweathermap.org"
 DATA_ENDPOINT = f"{BASE_URL}/data/2.5/weather{PARAMS}"
 FORCAST_ENDPOINT = f"{BASE_URL}/data/2.5/forecast{PARAMS}"
 
-
-# if os.environ.get("RPI") == "True":
-pin = board.D14
-dht_device = adafruit_dht.DHT11(pin)
+last_indoor_temp = 0.0
+last_indoor_humid = 0.0
 
 
 @dataclass
@@ -128,28 +125,29 @@ def get_forcast() -> List[WeatherReading]:
 
 
 def get_dht11_readings(attempts=3) -> (float, float):
+    dht_device = adafruit_dht.DHT11(17)
     i = 0
     while i < attempts:
         log.debug("Trying to read dht11, attempt: %s", i)
         try:
             temperature = dht_device.temperature
+            log.debug("temp: %d", temperature)
             pressure = dht_device.humidity
-            return round(temperature, 2), round(pressure, 2)
+            log.debug("humid: %d", pressure)
+            last_indoor_temp = round(temperature, 2)
+            last_indoor_humid = round(pressure, 2)
+            return last_indoor_temp, last_indoor_humid
         except RuntimeError as e:
             i += 1
             log.error("Error reading dht11: %s", e.args[0])
             time.sleep(2.5)
-    return 0.0, 0.0
+    return last_indoor_temp, last_indoor_humid
 
 
 def get_indoors():
     log.info("Getting indoors weather")
 
     temperature, pressure = get_dht11_readings()
-    # else:
-    #     # TODO
-    #     temperature = 0.0
-    #     pressure = 0.0
 
     log.debug("Raw indoors weather: {:05.2f}*C {:05.2f}hPa".format(temperature, pressure))
 

@@ -52,7 +52,7 @@ async function get_indoors_weather(){
         indoor_temp_max = data.temp;
     }
     if(data.temp < indoor_temp_min){
-        indoor_temp_min = data.temp;
+        indoor_temp_min = data.pressure;
     }
 
     setHtml("indoor_temp", data.temp);
