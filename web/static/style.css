@@ -22,52 +22,8 @@ body{
     font-weight: 300;
     font-size: 1.9em;
     margin: 0;
-}
-.container_title{
-    font-size: 0.8em;
-    text-align: center;
-    text-decoration: underline;
-    margin-bottom: 10px;
-}
-.container_sub_title{
-    font-size: 0.8em;
-}
-#current_description{
-    text-transform: capitalize;
-    font-size: 1em;
-    text-align: center;
-}
-.value{
-    font-size: 1.6em;
-}
-.units{
-    font-size: 0.8em;
-    font-weight: 150;
-}
-#forcast_weather_container{
-    flex-wrap: wrap;
-    width: 100%;
-}
-.forcast_container{
-    background-color: lightblue;
-}
-#date_time_container{
-    width: 100%;
-    height: 30px;
-    text-align: center;
-    font-size: 1.2em;
-}
-#current_weather_container{
-    width: 38%;
-    margin: 10px;
-}
-#indoors_weather_container{
-    margin: 10px;
-    width: 38%;
-}
-#weather_image_container{
-    margin: 10px;
-    width: 25%;
+    display: flex;
+    flex-direction: column;
 }
 .row{
     display: flex;
@@ -77,15 +33,48 @@ body{
     display: flex;
     flex-direction: column;
 }
-.space-between{
-    justify-content: space-between;
+#date_time_container{
+    width: 100%;
+    height: 30px;
+    text-align: center;
+    font-size: 1.2em;
 }
-.center {
-    justify-content: center;
+#weather_container{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    font-size: 1.6em;
 }
-.fifty {
+#outdoors_weather_container{
     width: 50%;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
 }
-.right-text {
-    text-align: right;
+#current_description{
+    text-transform: capitalize;
+    font-size: 1em;
+    text-align: center;
+}
+#indoors_weather_container{
+    margin: 10px;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+}
+.column_container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.units{
+    font-size: 0.8em;
+    align-self: flex-end;
+}
+#forcast_weather_container{
+    margin: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
 }
