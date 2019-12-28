@@ -48,6 +48,7 @@ async function get_indoors_weather(){
     console.log("checking for indoors weather");
     const data = await getApi(INDOORS_ENDPOINT);
     // console.log(data)
+
     if(data.temp > indoor_temp_max){
         indoor_temp_max = data.temp;
     }
@@ -57,6 +58,7 @@ async function get_indoors_weather(){
 
     setHtml("indoor_temp", data.temp);
     setHtml("indoor_humidity", data.humidity);
+    setHtml("indoor_pressure", data.pressure);
     setHtml("indoor_temp_max", indoor_temp_max);
     setHtml("indoor_temp_min", indoor_temp_min);
 }

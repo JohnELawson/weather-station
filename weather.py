@@ -148,12 +148,14 @@ def get_indoors():
         bme280 = get_bme280()
 
         temperature = round(bme280.temperature, 2)
-        humidity = round(bme280.humidity, 2)
-        pressure = round(bme280.pressure, 2)
+        humidity = int(bme280.humidity)
+        pressure = int(bme280.pressure)
         # altitude = bme280.altitude
     else:
         log.debug("Not using raspberry pi.")
-        temperature, humidity, pressure = 0.0
+        temperature = 11.11
+        humidity = 11
+        pressure = 1111
 
     log.debug(f"Raw indoors weather: {temperature}*C, {pressure}hPa, {humidity}%")
 
