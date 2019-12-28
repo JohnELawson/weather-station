@@ -1,7 +1,9 @@
 html{
     background-color: white;
-    width: 800px;
-    height: 480px;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
     display: flex;
 }
 body{
@@ -20,11 +22,13 @@ body{
     background-size: auto;
     background-origin: padding-box;
     background-clip: border-box;
-    display: flex;
     font-family: Roboto, sans-serif;
     font-weight: 300;
     font-size: 1.9em;
     margin: 0;
+    padding: 0;
+    max-height: 100%;
+    max-width: 100%;
     display: flex;
     flex-direction: column;
 }
