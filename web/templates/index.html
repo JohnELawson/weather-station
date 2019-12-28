@@ -3,6 +3,7 @@
     <head>
         <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
         <meta content="utf-8" http-equiv="encoding">
+        <script src="Chart.min.js"></script>
         <script src="main.js"></script>
         <link rel="stylesheet" href="style.css">
         <title>Weather</title>
@@ -54,6 +55,22 @@
 
             </div>
 
+            <div id="weather_description_icon_container">
+
+                <div class="column_container"> 
+                    <div class="icon_container">
+                        <img id="current_weather_icon" src=""></img>
+                    </div>
+                </div>
+    
+                <div class="column_container">
+                    <div class="row">
+                        <div id="current_description"></div>
+                    </div>
+                </div>
+
+            </div>
+
             <div id="indoors_weather_container">
                 
                 <div class="column_container">
@@ -96,18 +113,6 @@
         </div>
 
         <div id="forcast_weather_container">
-
-            <div class="column_container"> 
-                <div class="row">
-                    <img id="current_weather_icon" src=""></img>
-                </div>
-            </div>
-
-            <div class="column_container">
-                <div class="row">
-                    <div id="current_description"></div>
-                </div>
-            </div>
 
         </div>
 

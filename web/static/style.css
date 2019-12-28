@@ -43,23 +43,21 @@ body{
     width: 100%;
     display: flex;
     flex-direction: row;
-    margin-top: 10px;
     font-size: 1.6em;
+    justify-content: space-between;
 }
 #outdoors_weather_container{
-    width: 50%;
     margin: 10px;
     display: flex;
     flex-direction: column;
 }
 #current_description{
     text-transform: capitalize;
-    font-size: 1em;
+    font-size: 0.9em;
     text-align: center;
 }
 #indoors_weather_container{
     margin: 10px;
-    width: 50%;
     display: flex;
     flex-direction: column;
 }
@@ -72,9 +70,17 @@ body{
     font-size: 0.8em;
     align-self: flex-end;
 }
-#forcast_weather_container{
+#weather_description_icon_container{
     margin: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.icon_container{
+    margin-left: auto;
+    margin-right: auto;
+}
+#forcast_weather_container{
     width: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
 }

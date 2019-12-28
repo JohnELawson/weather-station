@@ -52,25 +52,19 @@ async function get_indoors_weather(){
         indoor_temp_max = data.temp;
     }
     if(data.temp < indoor_temp_min){
-        indoor_temp_min = data.pressure;
+        indoor_temp_min = data.temp;
     }
 
     setHtml("indoor_temp", data.temp);
-    setHtml("indoor_humidity", data.temp);
+    setHtml("indoor_humidity", data.humidity);
     setHtml("indoor_temp_max", indoor_temp_max);
     setHtml("indoor_temp_min", indoor_temp_min);
 }
 
 // async function get_forcast_weather(){
-    // console.log("checking for forcast weather");
+//     console.log("checking for forcast weather");
 //     const data = await getApi(FORCAST_ENDPOINT);
-
-//     let forcast_html = "";
-//     for(const [key, value] of Object.entries(data)) {
-//         console.log(key, value);
-//         forcast_html += "<div class='forcast_container'>" + value.temp + " °C</div>";
-//     }
-//     document.getElementById("forcast_weather_container").innerHTML = forcast_html;
+//     console.log(data)
 // }
 
 async function getApi(url){
