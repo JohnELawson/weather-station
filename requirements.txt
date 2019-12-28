@@ -2,4 +2,4 @@ flask
 flask_cors
 requests
 cachetools
-adafruit-circuitpython-dht
+adafruit-circuitpython-bme280

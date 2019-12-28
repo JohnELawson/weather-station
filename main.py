@@ -1,3 +1,4 @@
+import json
 import logging
 from flask import Flask, render_template
 from flask_cors import CORS
@@ -26,7 +27,7 @@ def get_current_weather():
 
 @app.route('/forcast_weather/')
 def get_forcast_weather():
-    return [i.to_json() for i in get_forcast()]
+    return json.dumps([i.to_json() for i in get_forcast()])
 
 
 @app.route('/indoors_weather/')

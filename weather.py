@@ -1,10 +1,9 @@
 import os
-import time
 import logging
 import datetime
 import requests
+import functools
 import cachetools.func
-import adafruit_dht
 from dataclasses import dataclass
 from typing import Mapping, Any, List
 
@@ -25,9 +24,6 @@ PARAMS = f"?lat={LAT}&lon={LON}&APPID={KEY}&units=metric"
 BASE_URL = "https://api.openweathermap.org"
 DATA_ENDPOINT = f"{BASE_URL}/data/2.5/weather{PARAMS}"
 FORCAST_ENDPOINT = f"{BASE_URL}/data/2.5/forecast{PARAMS}"
-
-last_indoor_temp = 0.0
-last_indoor_humid = 0.0
 
 
 @dataclass
@@ -124,38 +120,45 @@ def get_forcast() -> List[WeatherReading]:
     return forcast_weather
 
 
-def get_dht11_readings(attempts=3) -> (float, float):
-    dht_device = adafruit_dht.DHT11(17)
-    i = 0
-    while i < attempts:
-        log.debug("Trying to read dht11, attempt: %s", i)
-        try:
-            temperature = dht_device.temperature
-            log.debug("temp: %d", temperature)
-            pressure = dht_device.humidity
-            log.debug("humid: %d", pressure)
-            last_indoor_temp = round(temperature, 2)
-            last_indoor_humid = round(pressure, 2)
-            return last_indoor_temp, last_indoor_humid
-        except RuntimeError as e:
-            i += 1
-            log.error("Error reading dht11: %s", e.args[0])
-            time.sleep(2.5)
-    return last_indoor_temp, last_indoor_humid
+@functools.lru_cache(1)
+def get_bme280():
+    import board
+    import busio
+    import adafruit_bme280
+
+    i2c = busio.I2C(board.SCL, board.SDA)
+    bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c)
+
+    # Change this to match the location's pressure (hPa) at sea level
+    bme280.sea_level_pressure = 1013.25
+    bme280.mode = adafruit_bme280.MODE_NORMAL
+    bme280.standby_period = adafruit_bme280.STANDBY_TC_500
+    bme280.iir_filter = adafruit_bme280.IIR_FILTER_X16
+    bme280.overscan_pressure = adafruit_bme280.OVERSCAN_X16
+    bme280.overscan_humidity = adafruit_bme280.OVERSCAN_X1
+    bme280.overscan_temperature = adafruit_bme280.OVERSCAN_X2
+
+    return bme280
 
 
 def get_indoors():
     log.info("Getting indoors weather")
 
-    temperature, pressure = get_dht11_readings()
+    if os.environ.get("RPI") == "True":
+        bme280 = get_bme280()
 
-    log.debug("Raw indoors weather: {:05.2f}*C {:05.2f}hPa".format(temperature, pressure))
+        temperature = round(bme280.temperature, 2)
+        humidity = round(bme280.humidity, 2)
+        pressure = round(bme280.pressure, 2)
+        # altitude = bme280.altitude
+    else:
+        log.debug("Not using raspberry pi.")
+        temperature, humidity, pressure = 0.0
 
-    # return WeatherReading(temperature, pressure)
+    log.debug(f"Raw indoors weather: {temperature}*C, {pressure}hPa, {humidity}%")
+
     return {
         "temp": temperature,
-        "pressure": pressure
+        "pressure": pressure,
+        "humidity": humidity,
     }
-
-if __name__ == "__main__":
-    get_indoors()
