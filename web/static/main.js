@@ -47,7 +47,7 @@ async function get_current_weather(){
 async function get_indoors_weather(){
     console.log("checking for indoors weather");
     const data = await getApi(INDOORS_ENDPOINT);
-    // console.log(data)
+    console.log(data)
 
     if(data.temp > indoor_temp_max){
         indoor_temp_max = data.temp;
